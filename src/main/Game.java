@@ -15,16 +15,18 @@ import javax.swing.JFrame;
 import entities.Entity;
 import entities.Player;
 import entities.RecicleBin;
-import entities.Trash;
+import tiles.World;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 
     public static final int WIDTH = 800, HEIGHT = 600;
 
+    public static int qTrash = 0;
+
     public static List<Entity> entities;
-    public Player player;
-    public RecicleBin redBin, greenBin, blueBin, yellowBin, brownBin;
-    public static Trash trash;
+    public static Player player;
+    public static RecicleBin redBin, greenBin, blueBin, yellowBin, brownBin;
+    public static World world;
 
     private JFrame frame;
     private Thread thread;
@@ -40,13 +42,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         player = new Player(WIDTH / 2 - 25, HEIGHT / 2 - 25, 50, 50, null);
 
-        trash = new Trash(120, 140, 25, 25, null);
 
-        redBin = new RecicleBin(100, 50, 50, 50, null);
-        greenBin = new RecicleBin(200, 50, 50, 50, null);
-        blueBin = new RecicleBin(300, 50, 50, 50, null);
-        yellowBin = new RecicleBin(400, 50, 50, 50, null);
-        brownBin = new RecicleBin(500, 50, 50, 50, null);
+        redBin = new RecicleBin(100, 50, 50, 50, null, "red");
+        greenBin = new RecicleBin(200, 50, 50, 50, null, "green");
+        blueBin = new RecicleBin(300, 50, 50, 50, null, "blue");
+        yellowBin = new RecicleBin(400, 50, 50, 50, null, "yellow");
+        brownBin = new RecicleBin(500, 50, 50, 50, null, "brown");
+
+        world = new World();
 
         entities.add(redBin);
         entities.add(greenBin);
@@ -55,7 +58,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
         entities.add(brownBin);
 
         entities.add(player);
-        entities.add(trash);
 
     }
 
@@ -74,6 +76,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick() {
 
+        world.tick();
         for (int i = 0; i < entities.size(); i++) {
 
             Entity e = entities.get(i);
@@ -96,6 +99,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
+        world.render(g);
         for (int i = 0; i < entities.size(); i++) {
 
             Entity e = entities.get(i);
@@ -103,14 +107,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
             e.render(g);
         }
 
+
         g.dispose();
         bs.show();
     }
 
     public synchronized void start() {
         thread = new Thread(this);
-        isRunning = true;
         thread.start();
+        isRunning = true;
     }
 
     public synchronized void stop() {

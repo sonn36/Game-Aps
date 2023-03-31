@@ -56,6 +56,12 @@ public class Entity {
     }
 
 
+    public void followPath(Entity e1){
+
+        setX(e1.getX() + (e1.getWidth() / 2) /2);
+        setY(e1.getY() + (e1.getHeight() / 2) /2);
+    }
+
     public boolean checkCollision(Entity e1, Entity e2){
         Rectangle r1 = new Rectangle(e1.getX(), e1.getY(), e1.getWidth(), e1.getHeight());
         Rectangle r2 = new Rectangle(e2.getX(), e2.getY(), e2.getWidth(), e2.getHeight());
