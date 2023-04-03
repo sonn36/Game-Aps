@@ -15,22 +15,29 @@ import javax.swing.JFrame;
 import entities.Entity;
 import entities.Player;
 import entities.RecicleBin;
+import graphics.Menu;
+import graphics.UI;
 import tiles.World;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 
     public static final int WIDTH = 800, HEIGHT = 600;
 
-    public static int qTrash = 0;
+    public static int time = 30;
+    public static int points = 0;
 
     public static List<Entity> entities;
     public static Player player;
     public static RecicleBin redBin, greenBin, blueBin, yellowBin, brownBin;
     public static World world;
+    public static UI ui;
+    public static Menu menu;
 
     private JFrame frame;
     private Thread thread;
     private boolean isRunning = false;
+
+    private String currentScreen = "RUNNING";
 
     public Game() {
 
@@ -42,7 +49,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         player = new Player(WIDTH / 2 - 25, HEIGHT / 2 - 25, 50, 50, null);
 
-
         redBin = new RecicleBin(100, 50, 50, 50, null, "red");
         greenBin = new RecicleBin(200, 50, 50, 50, null, "green");
         blueBin = new RecicleBin(300, 50, 50, 50, null, "blue");
@@ -50,6 +56,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         brownBin = new RecicleBin(500, 50, 50, 50, null, "brown");
 
         world = new World();
+        menu = new Menu();
+        ui = new UI();
 
         entities.add(redBin);
         entities.add(greenBin);
@@ -76,12 +84,22 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick() {
 
-        world.tick();
-        for (int i = 0; i < entities.size(); i++) {
+        if (time <= 0) {
+            currentScreen = "MENU";
+        }
 
-            Entity e = entities.get(i);
+        if (currentScreen == "MENU") {
+            menu.tick();
+        }
 
-            e.tick();
+        if (currentScreen == "RUNNING") {
+            world.tick();
+            for (int i = 0; i < entities.size(); i++) {
+
+                Entity e = entities.get(i);
+
+                e.tick();
+            }
         }
 
     }
@@ -99,14 +117,20 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        world.render(g);
-        for (int i = 0; i < entities.size(); i++) {
-
-            Entity e = entities.get(i);
-
-            e.render(g);
+        if(currentScreen == "MENU"){
+            menu.render(g);
         }
 
+        if (currentScreen == "RUNNING") {
+            world.render(g);
+            for (int i = 0; i < entities.size(); i++) {
+
+                Entity e = entities.get(i);
+
+                e.render(g);
+            }
+            ui.render(g);
+        }
 
         g.dispose();
         bs.show();
@@ -150,6 +174,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
                 frames = 0;
+                if (time > 0) {
+                    time--;
+                }
             }
         }
 
@@ -174,8 +201,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
             player.right = true;
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             player.shoot();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+            player.boost = true;
         }
 
     }
@@ -192,6 +222,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_D) {
             player.right = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+            player.boost = false;
         }
 
     }

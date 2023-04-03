@@ -10,6 +10,10 @@ public class Trash extends Entity {
 
     private String color;
 
+    private String[] pos;
+    public boolean throwingTrash = false;
+    private int q = 0;
+
     public int firstY;
 
     public Trash(int x, int y, int width, int height, BufferedImage sprite, String color) {
@@ -20,28 +24,70 @@ public class Trash extends Entity {
 
     public void throwTrash(String dir) {
 
-        String[] pos = dir.split("-");
+        pos = dir.split("-");
 
-        if (pos[1].equals("up")) {
-
-            this.setY(this.getY() - 150);
-        }
-
-        else if (pos[1].equals("down")) {
-
-            this.setY(this.getY() + 150);
-        }
-        if (pos[0].equals("left")) {
-
-            this.setX(this.getX() - 150);
-        } else if (pos[0].equals("right")) {
-
-            this.setX(this.getX() + 150);
-        }
+        q = 0;
+        throwingTrash = true;
 
     }
 
+    public void changeDir() {
+        if (pos[0].equals("left")) {
+            pos[0] = "right";
+        } else if (pos[0].equals("right")) {
+            pos[0] = "left";
+        }
+
+        if (pos[1].equals("up")) {
+            pos[1] = "down";
+        } else if (pos[1].equals("down")) {
+            pos[1] = "up";
+        }
+    }
+
     public void tick() {
+
+        if (throwingTrash) {
+
+            if (q < 50) {
+                System.out.println("a");
+
+                if (getX() < 0 || getX() + getWidth() > Game.WIDTH ||
+                        getY() < 0 || getY() + getHeight() > Game.HEIGHT) {
+                    changeDir();
+                }
+
+                if (pos[1].equals("up")) {
+
+                    this.setY(this.getY() - 3);
+                }
+
+                else if (pos[1].equals("down")) {
+
+                    this.setY(this.getY() + 3);
+                }
+                if (pos[0].equals("left")) {
+
+                    this.setX(this.getX() - 3);
+                } else if (pos[0].equals("right")) {
+
+                    this.setX(this.getX() + 3);
+                }
+
+                q++;
+            } else {
+
+                throwingTrash = false;
+            }
+
+        } else {
+            if (checkCollision(this, Game.player)
+                    && (Game.player.holdingItem == this || Game.player.holdingItem == null)) {
+
+                followPath(Game.player);
+                Game.player.holdingItem = (Trash) this;
+            }
+        }
 
         if (checkCollision(this, Game.yellowBin) && color.equals("yellow") ||
                 checkCollision(this, Game.greenBin) && color.equals("green") ||
@@ -49,6 +95,7 @@ public class Trash extends Entity {
                 checkCollision(this, Game.redBin) && color.equals("red") ||
                 checkCollision(this, Game.brownBin) && color.equals("brown")) {
 
+                    Game.points += 10;
             Game.entities.remove(this);
 
         }
