@@ -95,7 +95,8 @@ public class Trash extends Entity {
                 checkCollision(this, Game.redBin) && color.equals("red") ||
                 checkCollision(this, Game.brownBin) && color.equals("brown")) {
 
-                    Game.points += 10;
+            Game.points += 10;
+
             Game.entities.remove(this);
 
         }

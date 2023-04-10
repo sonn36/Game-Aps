@@ -6,8 +6,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -19,12 +20,12 @@ import graphics.Menu;
 import graphics.UI;
 import tiles.World;
 
-public class Game extends Canvas implements Runnable, KeyListener {
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener {
 
     public static final int WIDTH = 800, HEIGHT = 600;
 
-    public static int time = 30;
-    public static int points = 0;
+    public static int time = 10;
+    public static int points = 10;
 
     public static List<Entity> entities;
     public static Player player;
@@ -37,7 +38,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private Thread thread;
     private boolean isRunning = false;
 
-    private String currentScreen = "RUNNING";
+    public static String currentScreen = "MENU";
 
     public Game() {
 
@@ -45,27 +46,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
         this.addKeyListener(this);
         initFrame();
 
-        entities = new ArrayList<Entity>();
-
-        player = new Player(WIDTH / 2 - 25, HEIGHT / 2 - 25, 50, 50, null);
-
-        redBin = new RecicleBin(100, 50, 50, 50, null, "red");
-        greenBin = new RecicleBin(200, 50, 50, 50, null, "green");
-        blueBin = new RecicleBin(300, 50, 50, 50, null, "blue");
-        yellowBin = new RecicleBin(400, 50, 50, 50, null, "yellow");
-        brownBin = new RecicleBin(500, 50, 50, 50, null, "brown");
-
         world = new World();
         menu = new Menu();
-        ui = new UI();
-
-        entities.add(redBin);
-        entities.add(greenBin);
-        entities.add(blueBin);
-        entities.add(yellowBin);
-        entities.add(brownBin);
-
-        entities.add(player);
+        world.startGame();
 
     }
 
@@ -117,7 +100,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        if(currentScreen == "MENU"){
+        if (currentScreen == "MENU") {
             menu.render(g);
         }
 
@@ -174,7 +157,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
                 frames = 0;
-                if (time > 0) {
+                if (time > 0 && currentScreen == "RUNNING") {
                     time--;
                 }
             }
@@ -188,44 +171,105 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void keyPressed(KeyEvent e) {
 
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            player.up = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_S) {
-            player.down = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_A) {
-            player.left = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_D) {
-            player.right = true;
+        if (currentScreen == "MENU") {
+
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                menu.left = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                menu.right = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+                menu.enter = true;
+            }
+
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            player.shoot();
-        }
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-            player.boost = true;
+        if (currentScreen == "RUNNING") {
+
+            if (e.getKeyCode() == KeyEvent.VK_W) {
+                player.up = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_S) {
+                player.down = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                player.left = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                player.right = true;
+            }
+
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                player.shoot();
+            }
+            if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                player.boost = true;
+            }
+
         }
 
     }
 
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            player.up = false;
+
+        if (currentScreen == "MENU") {
+
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                menu.left = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                menu.right = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                menu.enter = false;
+            }
+
         }
-        if (e.getKeyCode() == KeyEvent.VK_S) {
-            player.down = false;
+
+        if (currentScreen == "RUNNING") {
+            if (e.getKeyCode() == KeyEvent.VK_W) {
+                player.up = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_S) {
+                player.down = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                player.left = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                player.right = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                player.boost = false;
+            }
         }
-        if (e.getKeyCode() == KeyEvent.VK_A) {
-            player.left = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_D) {
-            player.right = false;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-            player.boost = false;
-        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 
