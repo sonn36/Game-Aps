@@ -17,6 +17,7 @@ import entities.Entity;
 import entities.Player;
 import entities.RecicleBin;
 import graphics.Menu;
+import graphics.Settings;
 import graphics.UI;
 import tiles.World;
 
@@ -33,6 +34,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static World world;
     public static UI ui;
     public static Menu menu;
+    public static Settings settings;
 
     private JFrame frame;
     private Thread thread;
@@ -44,10 +46,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.addKeyListener(this);
+
+        this.addMouseListener(this);
         initFrame();
 
+        // Sound.menuMusic.play();
         world = new World();
         menu = new Menu();
+        settings = new Settings();
+
         world.startGame();
 
     }
@@ -67,15 +74,21 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     public void tick() {
 
+
+
         if (time <= 0) {
             currentScreen = "MENU";
+            time = 30;
         }
 
         if (currentScreen == "MENU") {
             menu.tick();
         }
-
+        if (currentScreen == "SETTINGS") {
+            settings.tick();
+        }
         if (currentScreen == "RUNNING") {
+            Sound.gameSound.loop();
             world.tick();
             for (int i = 0; i < entities.size(); i++) {
 
@@ -102,6 +115,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         if (currentScreen == "MENU") {
             menu.render(g);
+        }
+        if (currentScreen == "SETTINGS") {
+            settings.render(g);
         }
 
         if (currentScreen == "RUNNING") {
@@ -186,6 +202,17 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         }
 
+        if (currentScreen == "SETTINGS") {
+
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                settings.down = true;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                settings.up = true;
+            }
+
+        }
+
         if (currentScreen == "RUNNING") {
 
             if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -228,6 +255,17 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         }
 
+        if (currentScreen == "SETTINGS") {
+
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                settings.down = false;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_D) {
+                settings.up = false;
+            }
+
+        }
+
         if (currentScreen == "RUNNING") {
             if (e.getKeyCode() == KeyEvent.VK_W) {
                 player.up = false;
@@ -253,8 +291,17 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     }
 
-    @Override
     public void mousePressed(MouseEvent e) {
+
+        if(currentScreen == "MENU"){
+            menu.mousePressed(e);
+        }
+
+        if (currentScreen == "SETTINGS"){
+            settings.mousePressed(e);
+            Settings.slider.mousePressed(e);
+        }
+
 
     }
 

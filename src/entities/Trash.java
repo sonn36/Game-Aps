@@ -50,7 +50,6 @@ public class Trash extends Entity {
         if (throwingTrash) {
 
             if (q < 50) {
-                System.out.println("a");
 
                 if (getX() < 0 || getX() + getWidth() > Game.WIDTH ||
                         getY() < 0 || getY() + getHeight() > Game.HEIGHT) {
