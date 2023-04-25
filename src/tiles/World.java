@@ -21,7 +21,7 @@ public class World {
         historic = new ArrayList<>();
     }
 
-    public void startGame(){
+    public void startGame() {
 
         Game.entities = new ArrayList<Entity>();
         Game.world = new World();
@@ -35,18 +35,17 @@ public class World {
         Game.yellowBin = new RecicleBin(400, 50, 50, 50, null, "yellow");
         Game.brownBin = new RecicleBin(500, 50, 50, 50, null, "brown");
 
-        
         Game.entities.add(Game.redBin);
         Game.entities.add(Game.greenBin);
         Game.entities.add(Game.blueBin);
         Game.entities.add(Game.yellowBin);
         Game.entities.add(Game.brownBin);
-        
+
         Game.entities.add(Game.player);
 
         Game.time = 30;
         Game.points = 0;
-        
+
     }
 
     public void generatePedestrian() {
@@ -68,7 +67,6 @@ public class World {
                 historic.add(i);
             }
 
-            
         }
     }
 

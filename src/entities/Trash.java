@@ -3,6 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import main.Game;
 
@@ -10,9 +11,9 @@ public class Trash extends Entity {
 
     private String color;
 
-    private String[] pos;
+    private int xDir = 0, yDir = 0;
     public boolean throwingTrash = false;
-    private int q = 0;
+    private int force = 50;
 
     public int firstY;
 
@@ -22,62 +23,42 @@ public class Trash extends Entity {
         this.firstY = y;
     }
 
-    public void throwTrash(String dir) {
+    public void throwTrash(int x, int y) {
 
-        pos = dir.split("-");
-
-        q = 0;
+        xDir = x;
+        yDir = y;
         throwingTrash = true;
 
     }
 
     public void changeDir() {
-        if (pos[0].equals("left")) {
-            pos[0] = "right";
-        } else if (pos[0].equals("right")) {
-            pos[0] = "left";
-        }
-
-        if (pos[1].equals("up")) {
-            pos[1] = "down";
-        } else if (pos[1].equals("down")) {
-            pos[1] = "up";
-        }
+        
     }
 
     public void tick() {
 
         if (throwingTrash) {
 
-            if (q < 50) {
-
-                if (getX() < 0 || getX() + getWidth() > Game.WIDTH ||
-                        getY() < 0 || getY() + getHeight() > Game.HEIGHT) {
-                    changeDir();
-                }
-
-                if (pos[1].equals("up")) {
-
-                    this.setY(this.getY() - 3);
-                }
-
-                else if (pos[1].equals("down")) {
-
-                    this.setY(this.getY() + 3);
-                }
-                if (pos[0].equals("left")) {
-
-                    this.setX(this.getX() - 3);
-                } else if (pos[0].equals("right")) {
-
-                    this.setX(this.getX() + 3);
-                }
-
-                q++;
-            } else {
-
-                throwingTrash = false;
+            System.out.println(xDir);
+            System.out.println(yDir);
+            List<List<Integer>> mousePosition = Game.ui.getPath(this.getX(), this.getY(), xDir, yDir);
+            if(xDir > this.getX()){
+                System.out.println("x0: "+ mousePosition.get(0).get(0) + " x1:" + mousePosition.get(0).get(mousePosition.size()));
+                
             }
+            if(yDir > this.getY()){
+                System.out.println("y0: "+ mousePosition.get(1).get(0) + " y1:" + mousePosition.get(1).get(mousePosition.size()));
+
+            }
+            for(int q = 0; q < force; q++){
+
+                //System.out.println("x: "+ mousePosition.get(0).get(q) + " y:" + mousePosition.get(1).get(q));
+                //this.setX(mousePosition.get(0).get(q));
+                //this.setY(mousePosition.get(1).get(q));
+
+            }
+
+            throwingTrash = false;
 
         } else {
             if (checkCollision(this, Game.player)

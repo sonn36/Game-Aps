@@ -19,7 +19,7 @@ public class Pedestrian  extends Entity{
 
         Random rand = new Random();
 
-        int i =rand.nextInt(0, 4);
+        int i = rand.nextInt(0, 4);
 
         String[] colors = {"red", "green", "blue", "yellow", "brown"};
 
@@ -27,10 +27,10 @@ public class Pedestrian  extends Entity{
         Game.entities.add(trash);
         if(pos == 0){
 
-            trash.throwTrash(" -right");
+            trash.throwTrash(Game.WIDTH / 2, Game.HEIGHT / 2);
         }
         if(pos == 1){
-            trash.throwTrash(" -left");
+            trash.throwTrash(Game.WIDTH / 2, Game.HEIGHT / 2);
         }
 
         Game.entities.remove(this);

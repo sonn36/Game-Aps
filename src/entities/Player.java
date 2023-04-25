@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import main.Game;
@@ -15,8 +16,6 @@ public class Player extends Entity {
 
 
     public boolean left, right, up, down;
-    public String xDir = " ";
-    public String yDir = "down";
 
     public boolean hasTrash = false;
     public Trash holdingItem;
@@ -26,13 +25,16 @@ public class Player extends Entity {
 
     }
 
-    public void shoot() {
+    public void shoot(MouseEvent e) {
         if (holdingItem != null) {
-            String dir = xDir + "-" + yDir;
-            holdingItem.throwTrash(dir);
+            int xx = e.getX();
+            int yy = e.getY();
+
+            holdingItem.throwTrash(xx, yy);
             holdingItem = null;
         }
     }
+
 
     public void tick() {
 
@@ -66,27 +68,17 @@ public class Player extends Entity {
 
         if (left && x > 10) {
             x -= spd;
-            xDir = "left";
-        } else if (right && x < Game.WIDTH - 60) {
+        } 
+        if (right && x < Game.WIDTH - 60) {
             x += spd;
-            xDir = "right";
-        } else {
-            if (!yDir.equals(" ")) {
-                xDir = " ";
-            }
-        }
+        } 
 
         if (up && y > 10) {
             y -= spd;
-            yDir = "up";
-        } else if (down && y < Game.HEIGHT - 60) {
-            y += spd;
-            yDir = "down";
-        } else {
-            if (!xDir.equals(" ")) {
-                yDir = " ";
-            }
         }
+        if (down && y < Game.HEIGHT - 60) {
+            y += spd;
+        } 
 
     }
 

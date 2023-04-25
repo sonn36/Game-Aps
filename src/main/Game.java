@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -27,6 +28,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     public static int time = 10;
     public static int points = 10;
+    public static int fps;
 
     public static List<Entity> entities;
     public static Player player;
@@ -40,7 +42,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     private Thread thread;
     private boolean isRunning = false;
 
-    public static String currentScreen = "MENU";
+    public static String currentScreen = "TESTE";
 
     public Game() {
 
@@ -96,6 +98,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
                 e.tick();
             }
+
         }
 
     }
@@ -116,6 +119,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         if (currentScreen == "MENU") {
             menu.render(g);
         }
+        
         if (currentScreen == "SETTINGS") {
             settings.render(g);
         }
@@ -129,6 +133,18 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
                 e.render(g);
             }
             ui.render(g);
+        }
+
+        if(currentScreen == "TESTE"){
+            
+
+                
+            
+
+            currentScreen = "RUNNING";
+
+
+            
         }
 
         g.dispose();
@@ -167,11 +183,12 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
                 tick();
                 render();
                 delta = 0;
+
                 frames++;
             }
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+                fps = frames;
                 frames = 0;
                 if (time > 0 && currentScreen == "RUNNING") {
                     time--;
@@ -228,9 +245,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
                 player.right = true;
             }
 
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                player.shoot();
-            }
             if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
                 player.boost = true;
             }
@@ -300,6 +314,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         if (currentScreen == "SETTINGS"){
             settings.mousePressed(e);
             Settings.slider.mousePressed(e);
+        }
+
+        if (currentScreen == "RUNNING") {
+            
+            player.shoot(e);
         }
 
 
