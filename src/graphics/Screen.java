@@ -29,18 +29,16 @@ public class Screen {
 
     public List<List<Integer>> getPath(int x0, int y0, int x1, int y1) {
 
-
-        if(x0 > x1){
-            int r = x0;
+        if (x0 > x1) {
+            int xr = x0;
             x0 = x1;
-            x1 = r;
+            x1 = xr;
         }
-        if(y0 > y1){
-            int r = y0;
+        if (y0 > y1) {
+            int yr = y0;
             y0 = y1;
-            y1 = r;
+            y1 = yr;
         }
-
 
         List<Integer> xValues = new ArrayList<>();
         List<Integer> yValues = new ArrayList<>();
@@ -49,33 +47,42 @@ public class Screen {
         int dx = x1 - x0;
         int dy = y1 - y0;
 
-        int d = 2 * dy - dx;
+        double x = x0, y = y0;
 
-        int x = x0, y = y0;
-
-        int incE = 2 * dy;
-        int incNE = 2 * (dy - dx);
-
-        xValues.add(x);
-        yValues.add(y);
+        if (dx > dy) {
 
 
 
-        
-        while (x < x1) {
-            if (d < 0) {
-                d += incE;
+            double inc = (double) (y1 - y0) / (x1 - x0);
 
-            } else {
-                d += incNE;
-                y++;
+            xValues.add((int) x);
+            yValues.add((int) y);
+
+            while (x < x1) {
+
+                y += inc;
+                x++;
+
+                xValues.add((int) x);
+                yValues.add((int) Math.round(y));
             }
-            x++;
+        } else {
 
-            xValues.add(x);
-            yValues.add(y);
+
+            double inc = (double) (x1 - x0) / (y1 - y0);
+
+            xValues.add((int) x);
+            yValues.add((int) y);
+
+            while (y < y1) {
+
+                x += inc;
+                y++;
+
+                xValues.add((int) Math.round(x));
+                yValues.add((int) y);
+            }
         }
-    
 
         values.add(xValues);
         values.add(yValues);

@@ -34,7 +34,7 @@ public class Menu extends Screen{
             }
 
             if(option == 1){
-                Game.settings.lastScreen = Game.currentScreen;
+                Game.settings.lastScreen = "MENU";
                 Game.currentScreen = "SETTINGS";
             }
 

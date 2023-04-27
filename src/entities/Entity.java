@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-
 public class Entity {
 
     protected double x, y;
@@ -21,21 +20,20 @@ public class Entity {
     }
 
     public int getX() {
-        return (int)this.x;
+        return (int) this.x;
     }
 
-    public void setX(int x){
+    public void setX(int x) {
         this.x = x;
     }
 
     public int getY() {
-        return (int)this.y;
+        return (int) this.y;
     }
 
-    public void setY(int y){
+    public void setY(int y) {
         this.y = y;
     }
-
 
     public int getWidth() {
         return this.width;
@@ -55,18 +53,17 @@ public class Entity {
         g.fillRect(this.getX(), this.getY(), this.width, this.height);
     }
 
+    public void followPath(Entity e1) {
 
-    public void followPath(Entity e1){
-
-        setX(e1.getX() + (e1.getWidth() / 2) /2);
-        setY(e1.getY() + (e1.getHeight() / 2) /2);
+        setX(e1.getX() + (e1.getWidth() / 2) / 2);
+        setY(e1.getY() + (e1.getHeight() / 2) / 2);
     }
 
-    public boolean checkCollision(Entity e1, Entity e2){
+    public boolean checkCollision(Entity e1, Entity e2) {
         Rectangle r1 = new Rectangle(e1.getX(), e1.getY(), e1.getWidth(), e1.getHeight());
         Rectangle r2 = new Rectangle(e2.getX(), e2.getY(), e2.getWidth(), e2.getHeight());
 
-        if(r1.intersects(r2)){
+        if (r1.intersects(r2)) {
             return true;
         }
 

@@ -43,7 +43,7 @@ public class World {
 
         Game.entities.add(Game.player);
 
-        Game.time = 30;
+        Game.time = 5;
         Game.points = 0;
 
     }

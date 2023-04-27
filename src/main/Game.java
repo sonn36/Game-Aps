@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -19,6 +18,7 @@ import entities.Player;
 import entities.RecicleBin;
 import graphics.Menu;
 import graphics.Settings;
+import graphics.Teste;
 import graphics.UI;
 import tiles.World;
 
@@ -38,11 +38,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static Menu menu;
     public static Settings settings;
 
+    public static Teste teste;
+
     private JFrame frame;
     private Thread thread;
     private boolean isRunning = false;
 
-    public static String currentScreen = "TESTE";
+    public static String currentScreen = "MENU";
 
     public Game() {
 
@@ -56,6 +58,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         world = new World();
         menu = new Menu();
         settings = new Settings();
+
+        teste = new Teste();
 
         world.startGame();
 
@@ -76,13 +80,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     public void tick() {
 
-
-
-        if (time <= 0) {
-            currentScreen = "MENU";
-            time = 30;
-        }
-
         if (currentScreen == "MENU") {
             menu.tick();
         }
@@ -92,11 +89,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         if (currentScreen == "RUNNING") {
             Sound.gameSound.loop();
             world.tick();
-            for (int i = 0; i < entities.size(); i++) {
+            if (time > 0) {
+                for (int i = 0; i < entities.size(); i++) {
 
-                Entity e = entities.get(i);
+                    Entity e = entities.get(i);
 
-                e.tick();
+                    e.tick();
+                }
             }
 
         }
@@ -119,12 +118,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         if (currentScreen == "MENU") {
             menu.render(g);
         }
-        
+
         if (currentScreen == "SETTINGS") {
             settings.render(g);
+
         }
 
         if (currentScreen == "RUNNING") {
+
             world.render(g);
             for (int i = 0; i < entities.size(); i++) {
 
@@ -132,19 +133,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
                 e.render(g);
             }
+
             ui.render(g);
         }
 
-        if(currentScreen == "TESTE"){
-            
+        if (currentScreen == "TESTE") {
 
-                
-            
+            teste.render(g);
 
-            currentScreen = "RUNNING";
-
-
-            
         }
 
         g.dispose();
@@ -232,6 +228,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
         if (currentScreen == "RUNNING") {
 
+            if (time < 0) {
+
+                if (ui.pressKey) {
+                    currentScreen = "MENU";
+                }
+            }
+
             if (e.getKeyCode() == KeyEvent.VK_W) {
                 player.up = true;
             }
@@ -307,25 +310,38 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
     public void mousePressed(MouseEvent e) {
 
-        if(currentScreen == "MENU"){
+        if (currentScreen == "MENU") {
             menu.mousePressed(e);
         }
 
-        if (currentScreen == "SETTINGS"){
+        if (currentScreen == "SETTINGS") {
             settings.mousePressed(e);
             Settings.slider.mousePressed(e);
         }
 
-        if (currentScreen == "RUNNING") {
-            
-            player.shoot(e);
+        if (currentScreen == "TESTE") {
+            teste.mousePressed(e);
         }
 
+        if (currentScreen == "RUNNING") {
+
+            if (time == 0) {
+                currentScreen = "MENU";
+            }
+
+            player.charge = true;
+        }
 
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+
+        if (currentScreen == "RUNNING") {
+
+            player.charge = false;
+            player.shoot(e.getX(), e.getY());
+        }
 
     }
 

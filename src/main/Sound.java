@@ -53,15 +53,15 @@ public class Sound {
             clips[p].loop(300);
         }
 
-        public void setVolume(float volume){
-            FloatControl gainControl =(FloatControl) clips[p].getControl(FloatControl.Type.MASTER_GAIN);
+        public void setVolume(float volume) {
+            FloatControl gainControl = (FloatControl) clips[p].getControl(FloatControl.Type.MASTER_GAIN);
             float range = gainControl.getMaximum() - gainControl.getMinimum();
             float gain = (range * volume) + gainControl.getMinimum();
             gainControl.setValue(gain);
         }
     }
 
-    //public static Clips menuMusic = load("/res/m1.wav", 1);
+    // public static Clips menuMusic = load("/res/m1.wav", 1);
     public static Clips gameSound = load("/res/Anxiety.wav", 1);
 
     private static Clips load(String name, int count) {

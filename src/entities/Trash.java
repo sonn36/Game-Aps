@@ -11,11 +11,13 @@ public class Trash extends Entity {
 
     private String color;
 
-    private int xDir = 0, yDir = 0;
     public boolean throwingTrash = false;
-    private int force = 50;
+    private int q = 0, force = 50;
 
     public int firstY;
+
+    private int x0, y0, x1, y1;
+    List<List<Integer>> mousePosition;
 
     public Trash(int x, int y, int width, int height, BufferedImage sprite, String color) {
         super(x, y, width, height, sprite);
@@ -23,42 +25,60 @@ public class Trash extends Entity {
         this.firstY = y;
     }
 
-    public void throwTrash(int x, int y) {
+    public void throwTrash(int x, int y, int force) {
 
-        xDir = x;
-        yDir = y;
+
+        this.force = force;
+        
+        x0 = this.getX();
+        y0 = this.getY();
+        x1 = x;
+        y1 = y;
+
+        mousePosition = Game.ui.getPath(x0, y0, x1, y1);
+        q = 0;
+        
         throwingTrash = true;
-
     }
 
     public void changeDir() {
-        
+
     }
 
     public void tick() {
 
         if (throwingTrash) {
 
-            System.out.println(xDir);
-            System.out.println(yDir);
-            List<List<Integer>> mousePosition = Game.ui.getPath(this.getX(), this.getY(), xDir, yDir);
-            if(xDir > this.getX()){
-                System.out.println("x0: "+ mousePosition.get(0).get(0) + " x1:" + mousePosition.get(0).get(mousePosition.size()));
-                
+
+            if (q < force) {
+
+
+                int i = q * 3;
+
+                try {
+
+                    if (x0 > x1) {
+                        this.setX(mousePosition.get(0).get((mousePosition.get(0).size() - 1) - i));
+
+                    } else {
+                        this.setX(mousePosition.get(0).get(i));
+                    }
+
+                    if (y0 > y1) {
+                        this.setY(mousePosition.get(1).get((mousePosition.get(1).size() - 1) - i));
+
+                    } else {
+                        this.setY(mousePosition.get(1).get(i));
+                    }
+                } catch (IndexOutOfBoundsException e) {
+
+                }
+
+                q++;
+
+            } else {
+                throwingTrash = false;
             }
-            if(yDir > this.getY()){
-                System.out.println("y0: "+ mousePosition.get(1).get(0) + " y1:" + mousePosition.get(1).get(mousePosition.size()));
-
-            }
-            for(int q = 0; q < force; q++){
-
-                //System.out.println("x: "+ mousePosition.get(0).get(q) + " y:" + mousePosition.get(1).get(q));
-                //this.setX(mousePosition.get(0).get(q));
-                //this.setY(mousePosition.get(1).get(q));
-
-            }
-
-            throwingTrash = false;
 
         } else {
             if (checkCollision(this, Game.player)
