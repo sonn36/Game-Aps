@@ -43,7 +43,7 @@ public class World {
 
         Game.entities.add(Game.player);
 
-        Game.time = 5;
+        Game.time = 30;
         Game.points = 0;
 
     }
@@ -54,14 +54,14 @@ public class World {
             Random rand = new Random();
             int i = rand.nextInt(0, 10);
             if (i < 5 && !historic.contains(i)) {
-                Pedestrian pedestrian = new Pedestrian(50, 100 + (i * 100), 50, 50, null, 0);
+                Pedestrian pedestrian = new Pedestrian(0 - 50, 100 + (i * 100 + (rand.nextInt(0, 100))), 50, 50, null, 0);
                 Game.entities.add(pedestrian);
                 qTrash++;
                 historic.add(i);
             }
 
             if (i >= 5 && !historic.contains(i)) {
-                Pedestrian pedestrian = new Pedestrian(Game.WIDTH - 100, 100 + ((i - 5) * 100), 50, 50, null, 1);
+                Pedestrian pedestrian = new Pedestrian(Game.WIDTH, 100 + ((i - 5) * 100 + (rand.nextInt(0, 100))), 50, 50, null, 1);
                 Game.entities.add(pedestrian);
                 qTrash++;
                 historic.add(i);

@@ -18,7 +18,6 @@ import entities.Player;
 import entities.RecicleBin;
 import graphics.Menu;
 import graphics.Settings;
-import graphics.Teste;
 import graphics.UI;
 import tiles.World;
 
@@ -38,8 +37,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static Menu menu;
     public static Settings settings;
 
-    public static Teste teste;
-
     private JFrame frame;
     private Thread thread;
     private boolean isRunning = false;
@@ -58,8 +55,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         world = new World();
         menu = new Menu();
         settings = new Settings();
-
-        teste = new Teste();
 
         world.startGame();
 
@@ -135,12 +130,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             }
 
             ui.render(g);
-        }
-
-        if (currentScreen == "TESTE") {
-
-            teste.render(g);
-
         }
 
         g.dispose();
@@ -319,14 +308,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
             Settings.slider.mousePressed(e);
         }
 
-        if (currentScreen == "TESTE") {
-            teste.mousePressed(e);
-        }
-
         if (currentScreen == "RUNNING") {
 
-            if (time == 0) {
-                currentScreen = "MENU";
+            if (time <= 0) {
+
+                if (ui.pressKey) {
+                    currentScreen = "MENU";
+                }
             }
 
             player.charge = true;

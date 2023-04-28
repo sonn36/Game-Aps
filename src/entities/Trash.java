@@ -14,7 +14,7 @@ public class Trash extends Entity {
     public boolean throwingTrash = false;
     private int q = 0, force = 50;
 
-    public int firstY;
+    public int firstY, firstX;
 
     private int x0, y0, x1, y1;
     List<List<Integer>> mousePosition;
@@ -23,13 +23,13 @@ public class Trash extends Entity {
         super(x, y, width, height, sprite);
         this.color = color;
         this.firstY = y;
+        this.firstX = x;
     }
 
     public void throwTrash(int x, int y, int force) {
 
-
         this.force = force;
-        
+
         x0 = this.getX();
         y0 = this.getY();
         x1 = x;
@@ -37,7 +37,7 @@ public class Trash extends Entity {
 
         mousePosition = Game.ui.getPath(x0, y0, x1, y1);
         q = 0;
-        
+
         throwingTrash = true;
     }
 
@@ -49,9 +49,7 @@ public class Trash extends Entity {
 
         if (throwingTrash) {
 
-
             if (q < force) {
-
 
                 int i = q * 3;
 
@@ -89,17 +87,38 @@ public class Trash extends Entity {
             }
         }
 
-        if (checkCollision(this, Game.yellowBin) && color.equals("yellow") ||
-                checkCollision(this, Game.greenBin) && color.equals("green") ||
-                checkCollision(this, Game.blueBin) && color.equals("blue") ||
-                checkCollision(this, Game.redBin) && color.equals("red") ||
-                checkCollision(this, Game.brownBin) && color.equals("brown")) {
+        for (int i = 0; i < Game.entities.size(); i++) {
 
-            Game.points += 10;
+            Entity e = Game.entities.get(i);
+            if (e instanceof RecicleBin) {
 
-            Game.entities.remove(this);
+                RecicleBin rb = (RecicleBin) Game.entities.get(i);
 
+                if (checkCollision(this, e)) {
+
+                    if (this.color.equals(rb.color)) {
+                        Game.points += 10;
+                    } else {
+                        if (Game.points >= 10) {
+
+                            Game.points -= 10;
+                        }
+                    }
+
+                    int j = 0;
+                    if (firstX > Game.WIDTH / 2) {
+                        j = (firstY / 100) + 5;
+                    } else {
+                        j = (firstY / 100);
+                    }
+
+                    Game.world.historic.remove(Game.world.historic.indexOf(j - 1));
+                    Game.world.qTrash--;
+                    Game.entities.remove(this);
+                }
+            }
         }
+
 
     }
 

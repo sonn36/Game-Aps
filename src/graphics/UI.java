@@ -8,9 +8,9 @@ import main.Game;
 
 public class UI extends Screen {
 
-    private int q1 = 0, q2 = 0;;
+    private int q1 = 0, q2 = 0;
 
-    public boolean pressKey = false;
+    public boolean pressKey = false, wrong, right;
 
     public void render(Graphics g) {
         if (Game.time > 0) {
@@ -23,6 +23,7 @@ public class UI extends Screen {
             g.setColor(Color.red);
 
             g.drawString("FPS: " + Game.fps, 10, 10);
+
 
         } else {
 
@@ -38,9 +39,11 @@ public class UI extends Screen {
             if (q1 < 100) {
                 q1 += 5;
             } else {
-                pressKey = true;
+                
+
                 if (q2 == 100) {
                     q2 = 0;
+                    pressKey = true;
                 }
                 if (q2 < 50) {
 
