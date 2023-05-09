@@ -26,7 +26,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static final int WIDTH = 800, HEIGHT = 600;
 
     public static int time = 10;
-    public static int points = 10;
+    public static int points = 10, highScore = 0;
     public static int fps;
 
     public static List<Entity> entities;
@@ -56,6 +56,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         menu = new Menu();
         settings = new Settings();
 
+        highScore = world.getScore();
         world.startGame();
 
     }
@@ -314,6 +315,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
                 if (ui.pressKey) {
                     currentScreen = "MENU";
+                    world.saveScore(Game.points);
+                    highScore = world.getScore();
+
                 }
             }
 

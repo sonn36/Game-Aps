@@ -119,7 +119,6 @@ public class Trash extends Entity {
             }
         }
 
-
     }
 
     public void render(Graphics g) {
