@@ -7,7 +7,7 @@ import extras.Slider;
 import main.Game;
 import main.Sound;
 
-public class Settings extends Screen{
+public class Settings extends Screen {
 
     public boolean up, down;
     private float volume = 0;
@@ -16,16 +16,16 @@ public class Settings extends Screen{
 
     public String lastScreen;
 
-    public Settings(){
+    public Settings() {
 
         addButton(420, 350, 230, 70, 0);
     }
 
     public void tick() {
 
-        if(enter){
+        if (enter) {
 
-            if(option == 0){
+            if (option == 0) {
                 Game.currentScreen = lastScreen;
             }
             enter = false;

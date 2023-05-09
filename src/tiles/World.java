@@ -1,9 +1,15 @@
 package tiles;
 
 import java.awt.Graphics;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import entities.Entity;
 import entities.Pedestrian;
@@ -43,8 +49,52 @@ public class World {
 
         Game.entities.add(Game.player);
 
-        Game.time = 30;
+        Game.time = 10;
         Game.points = 0;
+
+    }
+
+    public void saveScore(int score) {
+
+        int hScore = getScore();
+        if (hScore >= score) {
+            return;
+        }
+        BufferedWriter write = null;
+        try {
+            write = new BufferedWriter(new FileWriter("src/res/config.txt"));
+            write.write("highScore: " + score);
+            write.close();
+        } catch (IOException e) {
+
+            System.out.println("a");
+        }
+    }
+
+    public int getScore() {
+
+        File file = new File("src/res/config.txt");
+        try {
+            if (file.createNewFile()) {
+                System.out.println("criado com sucesso");
+            }
+
+            try {
+                Scanner scan = new Scanner(file);
+                String text = scan.nextLine().split(" ")[1];
+                scan.close();
+                return Integer.valueOf(text);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("teste");
+        return 0;
 
     }
 
@@ -54,14 +104,16 @@ public class World {
             Random rand = new Random();
             int i = rand.nextInt(0, 10);
             if (i < 5 && !historic.contains(i)) {
-                Pedestrian pedestrian = new Pedestrian(0 - 50, 100 + (i * 100 + (rand.nextInt(0, 100))), 50, 50, null, 0);
+                Pedestrian pedestrian = new Pedestrian(0 - 50, 100 + (i * 100 + (rand.nextInt(0, 100))), 50, 50, null,
+                        0);
                 Game.entities.add(pedestrian);
                 qTrash++;
                 historic.add(i);
             }
 
             if (i >= 5 && !historic.contains(i)) {
-                Pedestrian pedestrian = new Pedestrian(Game.WIDTH, 100 + ((i - 5) * 100 + (rand.nextInt(0, 100))), 50, 50, null, 1);
+                Pedestrian pedestrian = new Pedestrian(Game.WIDTH, 100 + ((i - 5) * 100 + (rand.nextInt(0, 100))), 50,
+                        50, null, 1);
                 Game.entities.add(pedestrian);
                 qTrash++;
                 historic.add(i);

@@ -24,7 +24,6 @@ public class UI extends Screen {
 
             g.drawString("FPS: " + Game.fps, 10, 10);
 
-
         } else {
 
             g.setColor(new Color(0, 200, 255, 100));
@@ -39,7 +38,6 @@ public class UI extends Screen {
             if (q1 < 100) {
                 q1 += 5;
             } else {
-                
 
                 if (q2 == 100) {
                     q2 = 0;
